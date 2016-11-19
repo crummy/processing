@@ -25,7 +25,7 @@ public class Asteroids extends PApplet {
 	@Override
 	public void setup() {
 		clear();
-		SensorReader.readSensors(sensors -> desiredAngle += radians((float)sensors.alpha));
+		SensorReader.readSensors(sensors -> desiredAngle += radians((float)sensors.gamma));
 
 		for (int i = 0; i < 100; ++i) {
 			stars.add(new Star(random(width), random(height)));

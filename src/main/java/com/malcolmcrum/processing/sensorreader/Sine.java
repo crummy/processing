@@ -11,12 +11,12 @@ public class Sine extends PApplet {
 	}
 
 	private float x = -1;
-	private int time = 0;
+	private float time = 0;
 
 	@Override
 	public void settings() {
 		size(480, 480);
-		SensorReader.readSensors(sensors -> x = (float)sensors.x);
+		SensorReader.readSensors(sensors -> x += (float)sensors.beta);
 	}
 
 	@Override
@@ -26,18 +26,20 @@ public class Sine extends PApplet {
 
 	@Override
 	public void draw() {
-		time++;
+		time += 0.0001;
 
 		clearScreen();
 
-		int radius = 32;
-		for (int i = 0; i < 32; ++i) {
-			ellipse(radius * i, width/2 + sin(time + i*32), radius, radius);
+		int radius = 8;
+		for (int i = 0; i < width/radius; ++i) {
+			fill((time + i*x*0.01f) * 255, (time + i*x*0.01f) * -255, 0);
+			//fill(255, 0, 0);
+			ellipse(radius * i, width/2 + width/2 * sin(time + i*x*0.01f), radius, radius);
 		}
 	}
 
 	private void clearScreen() {
-		color(255, 255, 255, 0.5f);
+		fill(255, 255, 255, 20);
 		rect(0, 0, width, height);
 	}
 }

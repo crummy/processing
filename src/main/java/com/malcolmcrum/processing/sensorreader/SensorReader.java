@@ -62,8 +62,7 @@ public class SensorReader {
 		}).on("phonemotion", data -> {
 			receivedEvent(data);
 		}).on(Socket.EVENT_DISCONNECT, data -> {
-			JSONObject obj = (JSONObject) data[0];
-			updateStatus("Disconnected (" + obj + ")");
+			updateStatus("Disconnected (" + data + ")");
 		});
 		socket.connect();
 	}
