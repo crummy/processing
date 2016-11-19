@@ -76,8 +76,8 @@ public class Asteroids extends PApplet {
 		}
 
 		void move() {
-			x = x + sin(angle);
-			y = y + cos(angle);
+			x = x + sin(angle) * 4;
+			y = y + cos(angle) * 4;
 
 			if (x < 0) {
 				x = width;

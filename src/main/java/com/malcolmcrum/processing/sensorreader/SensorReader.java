@@ -83,7 +83,7 @@ public class SensorReader {
 		try {
 			JSONObject obj = (JSONObject) data[0];
 
-			updateStatus("Event received: " + obj);
+			//updateStatus("Event received: " + obj);
 
 			double x = obj.getJSONObject("acceleration").getDouble("x");
 			double y = obj.getJSONObject("acceleration").getDouble("y");
