@@ -14,7 +14,10 @@ public class Asteroids extends PApplet {
 	}
 
 	private float angle;
+	private float speed;
+
 	private float desiredAngle;
+	private float desiredSpeed;
 	private List<Star> stars = new ArrayList<>();
 
 	@Override
@@ -25,7 +28,10 @@ public class Asteroids extends PApplet {
 	@Override
 	public void setup() {
 		clear();
-		SensorReader.readSensors(sensors -> desiredAngle += radians((float)sensors.gamma));
+		SensorReader.readSensors(sensors -> {
+			desiredAngle += radians((float)sensors.gamma);
+			desiredSpeed = abs((float)sensors.x) + abs((float)sensors.y) + abs((float)sensors.z);
+		});
 
 		for (int i = 0; i < 100; ++i) {
 			stars.add(new Star(random(width), random(height)));
@@ -36,6 +42,7 @@ public class Asteroids extends PApplet {
 	public void draw() {
 		clear();
 		angle = lerp(angle, desiredAngle, 0.9f);
+		speed = lerp(speed, desiredSpeed, 0.01f);
 		drawStarField();
 		drawShip();
 	}
@@ -76,8 +83,8 @@ public class Asteroids extends PApplet {
 		}
 
 		void move() {
-			x = x + sin(angle) * 4;
-			y = y + cos(angle) * 4;
+			x = x + sin(angle) * speed;
+			y = y + cos(angle) * speed;
 
 			if (x < 0) {
 				x = width;
