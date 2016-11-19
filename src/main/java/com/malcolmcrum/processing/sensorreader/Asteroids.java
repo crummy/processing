@@ -1,4 +1,4 @@
-package com.malcolmcrum.processing.floatreader;
+package com.malcolmcrum.processing.sensorreader;
 
 import processing.core.PApplet;
 
@@ -25,7 +25,7 @@ public class Asteroids extends PApplet {
 	@Override
 	public void setup() {
 		clear();
-		FloatReader.read(newFloat -> desiredAngle = radians(360 * newFloat));
+		SensorReader.readFloats(newFloat -> desiredAngle += newFloat - newFloat/2);
 
 		for (int i = 0; i < 100; ++i) {
 			stars.add(new Star(random(width), random(height)));
@@ -35,7 +35,7 @@ public class Asteroids extends PApplet {
 	@Override
 	public void draw() {
 		clear();
-		angle = lerp(angle, desiredAngle, 0.5f);
+		angle = lerp(angle, desiredAngle, 0.01f);
 		drawStarField();
 		drawShip();
 	}

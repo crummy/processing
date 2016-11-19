@@ -1,4 +1,4 @@
-package com.malcolmcrum.processing.floatreader;
+package com.malcolmcrum.processing.sensorreader;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -12,23 +12,37 @@ import java.util.Set;
 /**
  * Created by crummy on 19/11/2016.
  */
-public class FloatReader {
+public class SensorReader {
 
 	private final String uri = "http://192.168.2.221:3000/";
 
 	private final Set<FloatListener> floatListeners = new HashSet<>();
 	private final Set<StatusListener> statusListeners = new HashSet<>();
+	private final Set<SensorListener> sensorListeners = new HashSet<>();
 
-	public static FloatReader read(FloatListener floatListener) {
-		return new FloatReader(floatListener);
+	static SensorReader readSensors(SensorListener sensorListener) {
+		return new SensorReader(sensorListener);
 	}
 
-	private FloatReader(FloatListener floatListener) {
+	static SensorReader readFloats(FloatListener floatListener) {
+		return new SensorReader(floatListener);
+	}
+
+	private SensorReader(SensorListener sensorListener) {
+		this();
+		addDataListener(sensorListener);
+	}
+
+	private void addDataListener(SensorListener sensorListener) {
+		sensorListeners.add(sensorListener);
+	}
+
+	private SensorReader(FloatListener floatListener) {
 		this();
 		addFloatListener(floatListener);
 	}
 
-	private FloatReader() {
+	private SensorReader() {
 		IO.Options opts = new IO.Options();
 		opts.reconnection = true;
 
@@ -45,7 +59,7 @@ public class FloatReader {
 		socket.on(Socket.EVENT_CONNECT, data -> {
 			updateStatus("Connected (" + data + ")");
 			socket.emit("my other event", "hi from a new client");
-		}).on("data", data -> {
+		}).on("phonemotion", data -> {
 			receivedEvent(data);
 		}).on(Socket.EVENT_DISCONNECT, data -> {
 			JSONObject obj = (JSONObject) data[0];
@@ -67,15 +81,19 @@ public class FloatReader {
 	}
 
 	private void receivedEvent(Object[] data) {
-		float f;
 		try {
 			JSONObject obj = (JSONObject) data[0];
 
 			updateStatus("Event received: " + obj);
 
-			f = (float) obj.getDouble("acc");
+			double x = obj.getJSONObject("acc").getJSONObject("acceleration").getDouble("x");
+			double y = obj.getJSONObject("acc").getJSONObject("acceleration").getDouble("y");
+			double z = obj.getJSONObject("acc").getJSONObject("acceleration").getDouble("z");
+			Sensors sensors = new Sensors(x, y, z, 0, 0, 0);
 
-			floatListeners.forEach(listener -> listener.receivedFloat(f));
+			sensorListeners.forEach(listener -> listener.receivedData(sensors));
+			floatListeners.forEach(listener -> listener.receivedFloat((float)x));
+
 		} catch (ClassCastException e) {
 			updateStatus("Couldn't cast class" + e.getMessage());
 		} catch (JSONException e) {
@@ -89,5 +107,22 @@ public class FloatReader {
 
 	interface StatusListener {
 		void statusChanged(String message);
+	}
+
+	interface SensorListener {
+		void receivedData(Sensors sensors);
+	}
+
+	class Sensors {
+		public final double x,y,z;
+		public final double alpha,beta,gamma;
+		public Sensors(double x, double y, double z, double alpha, double beta, double gamma) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+			this.alpha = alpha;
+			this.beta = beta;
+			this.gamma = gamma;
+		}
 	}
 }

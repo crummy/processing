@@ -1,4 +1,4 @@
-package com.malcolmcrum.processing.floatreader;
+package com.malcolmcrum.processing.sensorreader;
 
 import processing.core.PApplet;
 
@@ -15,7 +15,7 @@ public class FloatReaderExample extends PApplet {
 	@Override
 	public void settings() {
 		size(480, 480);
-		FloatReader.read(newFloat -> x = newFloat);
+		SensorReader.readFloats(f -> x = f);
 	}
 
 	@Override
