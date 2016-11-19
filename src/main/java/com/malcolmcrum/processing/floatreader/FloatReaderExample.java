@@ -17,6 +17,9 @@ public class FloatReaderExample extends PApplet {
 	}
 
 	public FloatReaderExample() throws URISyntaxException {
+		IO.Options opts = new IO.Options();
+		opts.reconnection = true;
+
 		String uri = "http://192.168.2.221:3000/";
 		Socket socket = IO.socket(uri);
 		status = "Connecting to " + uri;
@@ -36,7 +39,6 @@ public class FloatReaderExample extends PApplet {
 
 	private void receivedEvent(JSONObject json) {
 		try {
-			System.out.println(json);
 			x = (float)json.getDouble("acc");
 		} catch (JSONException e) {
 			status = "Json parse failed: " + e.getMessage();
@@ -48,7 +50,7 @@ public class FloatReaderExample extends PApplet {
 
 	@Override
 	public void settings() {
-		size(800, 480);
+		size(480, 480);
 	}
 
 	@Override
@@ -61,6 +63,7 @@ public class FloatReaderExample extends PApplet {
 	public void draw() {
 		clear();
 		text(status, 0, 10);
-		text(x, width / 2, height / 2);
+		ellipseMode(RADIUS);
+		ellipse(width/2, height/2, width*x/2, height*x/2);
 	}
 }
