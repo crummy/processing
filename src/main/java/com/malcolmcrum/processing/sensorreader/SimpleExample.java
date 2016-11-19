@@ -5,9 +5,9 @@ import processing.core.PApplet;
 /**
  * Created by crummy on 19/11/2016.
  */
-public class FloatReaderExample extends PApplet {
+public class SimpleExample extends PApplet {
 	public static void main(String args[]) {
-		PApplet.main(FloatReaderExample.class.getName());
+		PApplet.main(SimpleExample.class.getName());
 	}
 
 	private float radius = 0;

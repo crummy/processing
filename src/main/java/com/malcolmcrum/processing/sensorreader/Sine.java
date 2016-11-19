@@ -33,7 +33,6 @@ public class Sine extends PApplet {
 		int radius = 8;
 		for (int i = 0; i < width/radius; ++i) {
 			fill((time + i*x*0.01f) * 255, (time + i*x*0.01f) * -255, 0);
-			//fill(255, 0, 0);
 			ellipse(radius * i, width/2 + width/2 * sin(time + i*x*0.01f), radius, radius);
 		}
 	}

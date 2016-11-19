@@ -51,9 +51,9 @@ public class Asteroids extends PApplet {
 		ellipseMode(CENTER);
 		stars.forEach(star -> {
 			star.move();
-			float x = star.getX();
-			float y = star.getY();
-			ellipse(x, y, 3, 3);
+			double x = star.getX();
+			double y = star.getY();
+			ellipse((float)x, (float)y, 3, 3);
 		});
 	}
 
@@ -66,19 +66,19 @@ public class Asteroids extends PApplet {
 	}
 
 	private class Star {
-		private float x;
-		private float y;
+		private double x;
+		private double y;
 
 		Star(float x, float y) {
 			this.x = x;
 			this.y = y;
 		}
 
-		float getX() {
+		double getX() {
 			return x;
 		}
 
-		float getY() {
+		double getY() {
 			return y;
 		}
 
