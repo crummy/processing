@@ -52,7 +52,7 @@ public class Asteroids extends PApplet {
 
 	private void drawShip() {
 		pushMatrix();
-		translate(width/2, height/2);
+		translate(width/2 - 8, height/2 - 8);
 		rotate(-angle);
 		triangle(0, 16, 16, 16, 8, -4);
 		popMatrix();

@@ -10,6 +10,7 @@ public class FloatReaderExample extends PApplet {
 		PApplet.main(FloatReaderExample.class.getName());
 	}
 
+	private float radius = 0;
 	private float x = -1;
 
 	@Override
@@ -25,8 +26,10 @@ public class FloatReaderExample extends PApplet {
 
 	@Override
 	public void draw() {
+		radius = lerp(radius, width*x/2, 0.1f);
+
 		clear();
 		ellipseMode(RADIUS);
-		ellipse(width/2, height/2, width*x/2, height*x/2);
+		ellipse(width/2, height/2, radius, radius);
 	}
 }
