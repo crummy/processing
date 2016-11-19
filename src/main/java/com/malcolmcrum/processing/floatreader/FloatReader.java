@@ -19,12 +19,16 @@ public class FloatReader {
 	private final Set<FloatListener> floatListeners = new HashSet<>();
 	private final Set<StatusListener> statusListeners = new HashSet<>();
 
-	FloatReader(FloatListener floatListener) {
+	public static FloatReader read(FloatListener floatListener) {
+		return new FloatReader(floatListener);
+	}
+
+	private FloatReader(FloatListener floatListener) {
 		this();
 		addFloatListener(floatListener);
 	}
 
-	FloatReader() {
+	private FloatReader() {
 		IO.Options opts = new IO.Options();
 		opts.reconnection = true;
 

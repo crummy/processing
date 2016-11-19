@@ -15,7 +15,7 @@ public class FloatReaderExample extends PApplet {
 	@Override
 	public void settings() {
 		size(480, 480);
-		FloatReader floatReader = new FloatReader(newFloat -> x = newFloat);
+		FloatReader.read(newFloat -> x = newFloat);
 	}
 
 	@Override
