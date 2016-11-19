@@ -25,7 +25,7 @@ public class Asteroids extends PApplet {
 	@Override
 	public void setup() {
 		clear();
-		SensorReader.readFloats(newFloat -> desiredAngle += newFloat - newFloat/2);
+		SensorReader.readSensors(sensors -> desiredAngle += radians((float)sensors.alpha));
 
 		for (int i = 0; i < 100; ++i) {
 			stars.add(new Star(random(width), random(height)));
@@ -35,7 +35,7 @@ public class Asteroids extends PApplet {
 	@Override
 	public void draw() {
 		clear();
-		angle = lerp(angle, desiredAngle, 0.01f);
+		angle = lerp(angle, desiredAngle, 0.9f);
 		drawStarField();
 		drawShip();
 	}

@@ -86,10 +86,14 @@ public class SensorReader {
 
 			updateStatus("Event received: " + obj);
 
-			double x = obj.getJSONObject("acc").getJSONObject("acceleration").getDouble("x");
-			double y = obj.getJSONObject("acc").getJSONObject("acceleration").getDouble("y");
-			double z = obj.getJSONObject("acc").getJSONObject("acceleration").getDouble("z");
-			Sensors sensors = new Sensors(x, y, z, 0, 0, 0);
+			double x = obj.getJSONObject("acceleration").getDouble("x");
+			double y = obj.getJSONObject("acceleration").getDouble("y");
+			double z = obj.getJSONObject("acceleration").getDouble("z");
+			double alpha = obj.getJSONObject("rotationRate").getDouble("alpha");
+			double beta = obj.getJSONObject("rotationRate").getDouble("beta");
+			double gamma = obj.getJSONObject("rotationRate").getDouble("gamma");
+
+			Sensors sensors = new Sensors(x, y, z, alpha, beta, gamma);
 
 			sensorListeners.forEach(listener -> listener.receivedData(sensors));
 			floatListeners.forEach(listener -> listener.receivedFloat((float)x));
