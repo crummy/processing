@@ -1,10 +1,12 @@
 package com.malcolmcrum.processing.floatreader;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import org.json.JSONException;
+import org.json.JSONObject;
 import processing.core.PApplet;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by crummy on 19/11/2016.
@@ -14,31 +16,34 @@ public class FloatReaderExample extends PApplet {
 		PApplet.main(FloatReaderExample.class.getName());
 	}
 
-	public FloatReaderExample() {
-		CompletableFuture.runAsync(() -> {
-			URI server;
-			try {
-				server = new URI("ws://Malcolms-MacBook-Pro.local:8080/");
-			} catch (URISyntaxException e) {
-				throw new RuntimeException(e);
-			}
-			WebsocketClientEndpoint clientEndPoint = new WebsocketClientEndpoint(server);
-
-			clientEndPoint.addMessageHandler(message -> {
-				float f = readFloat(message);
-				receivedFloat(f);
-			});
+	public FloatReaderExample() throws URISyntaxException {
+		String uri = "http://192.168.2.221:3000/";
+		Socket socket = IO.socket(uri);
+		status = "Connecting to " + uri;
+		socket.on(Socket.EVENT_CONNECT, data -> {
+			status = "Connected (" + data + ")";
+			socket.emit("my other event", "hi from a new client");
+		}).on("data", data -> {
+			JSONObject obj = (JSONObject) data[0];
+			status = "Event received: " + obj;
+			receivedEvent(obj);
+		}).on(Socket.EVENT_DISCONNECT, data -> {
+			JSONObject obj = (JSONObject) data[0];
+			status = "Disconnected (" + obj + ")";
 		});
+		socket.connect();
 	}
 
-	private float readFloat(String message) {
-		return parseFloat(message);
+	private void receivedEvent(JSONObject json) {
+		try {
+			System.out.println(json);
+			x = (float)json.getDouble("acc");
+		} catch (JSONException e) {
+			status = "Json parse failed: " + e.getMessage();
+		}
 	}
 
-	private void receivedFloat(float f) {
-		x = f;
-	}
-
+	private String status = "Waiting for connection";
 	private float x = -1;
 
 	@Override
@@ -55,10 +60,7 @@ public class FloatReaderExample extends PApplet {
 	@Override
 	public void draw() {
 		clear();
-		if (x == -1) {
-			text("Waiting for server...", width/2, height/2);
-		} else {
-			text(x, width / 2, height / 2);
-		}
+		text(status, 0, 10);
+		text(x, width / 2, height / 2);
 	}
 }
