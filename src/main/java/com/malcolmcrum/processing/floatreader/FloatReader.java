@@ -46,9 +46,7 @@ public class FloatReader {
 			updateStatus("Connected (" + data + ")");
 			socket.emit("my other event", "hi from a new client");
 		}).on("data", data -> {
-			JSONObject obj = (JSONObject) data[0];
-			updateStatus("Event received: " + obj);
-			receivedEvent(obj);
+			receivedEvent(data);
 		}).on(Socket.EVENT_DISCONNECT, data -> {
 			JSONObject obj = (JSONObject) data[0];
 			updateStatus("Disconnected (" + obj + ")");
@@ -68,11 +66,18 @@ public class FloatReader {
 		statusListeners.forEach(listener -> listener.statusChanged(message));
 	}
 
-	private void receivedEvent(JSONObject json) {
+	private void receivedEvent(Object[] data) {
 		float f;
 		try {
-			f = (float)json.getDouble("acc");
+			JSONObject obj = (JSONObject) data[0];
+
+			updateStatus("Event received: " + obj);
+
+			f = (float) obj.getDouble("acc");
+
 			floatListeners.forEach(listener -> listener.receivedFloat(f));
+		} catch (ClassCastException e) {
+			updateStatus("Couldn't cast class" + e.getMessage());
 		} catch (JSONException e) {
 			updateStatus("Json parse failed: " + e.getMessage());
 		}
