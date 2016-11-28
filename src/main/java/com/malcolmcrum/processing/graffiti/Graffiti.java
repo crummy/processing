@@ -1,4 +1,4 @@
-package com.malcolmcrum.processing;
+package com.malcolmcrum.processing.graffiti;
 
 import javafx.geometry.Point2D;
 import processing.core.PApplet;

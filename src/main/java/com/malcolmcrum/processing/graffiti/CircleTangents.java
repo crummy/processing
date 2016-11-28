@@ -1,4 +1,4 @@
-package com.malcolmcrum.processing;
+package com.malcolmcrum.processing.graffiti;
 
 import java.util.Arrays;
 
